@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { CardContainer, Card } from '../UI/Card.jsx';
-import './Students.scss';
+import { CardContainer } from '../UI/Card.jsx';
+import UserCard from '../entity/user/UserCard.jsx';
 
 function Students() {
   // Initialisation ----------------------------------------------------
@@ -45,28 +45,17 @@ function Students() {
     return (
     <>
         <h1>Students</h1>
-        {
-            !students
-            ? <p>loading records ...</p>
-            :
-            <>
-                <CardContainer>
-                    {students.map((student)=>{
-                        return(
-                        <div className='studentCard'key={student.UserEmail}>
-                        <Card>
-                            <p>{student.UserEmail.substring(0,8)}</p>
-                            <p>{`${student.UserFirstname} ${student.UserLastname}`}</p>
-                            <img src={student.UserImageURL} />
-                        </Card>
-                        </div>
-                        );
-                    })
-                    }
-                </CardContainer>
-                <button onClick={() => handleAdd(newStudent)}>Add student</button>
-            </>
-        }
+
+        <CardContainer>
+            {!students ? (
+            <p>loading records ...</p>
+            ) : students.length === 0 ? (
+            <p>No records found ...</p>    
+            ) : (
+            students.map((student)=> <UserCard user = {student} key={student.UserID}/>)
+            )}
+        </CardContainer>
+        <button onClick={() => handleAdd(newStudent)}>Add student</button>
     </>
     );
 }

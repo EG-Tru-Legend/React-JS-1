@@ -1,4 +1,6 @@
-import { CardContainer, Card } from '../UI/Card.jsx';
+import { useState, useEffect } from 'react';
+import { CardContainer } from '../UI/Card.jsx';
+import ModuleCard from '../entity/module/ModuleCard.jsx';
 import './Modules.scss';
 
 const modulelist = [
@@ -86,27 +88,38 @@ const modulelist = [
 
 function Modules() {
   // Initialisation ----------------------------------------------------
+  const loggedInUserGroup = 820;
+  const apiURL = `https://softwarehub.uk/unibase/api`;
+  const myModulesEndpoint = `${apiURL}/modules/leaders/${loggedInUserGroup}`;
   // State -------------------------------------------------------------
+  const [modules, setModules] = useState(null);
+
+  const apiGet = async (endpoint) => {
+    const response  = await fetch(endpoint);
+    const result = await response.json();
+    setModules(result);
+  }
+
+  useEffect(() => { 
+    apiGet(myModulesEndpoint) 
+    }, [myModulesEndpoint]);
   // Handlers ----------------------------------------------------------
   // View --------------------------------------------------------------
-    return(
+    return (
     <>
         <h1>Modules</h1>
-        <CardContainer>
-          {
-            modulelist.map((module)=>{
-              return(
-              <div className='moduleCard' key={module.ModuleCode}>
-                <Card>
-                  <p>{module.ModuleCode}</p>
-                  <p>{module.ModuleName}</p>
-                  <img src={module.ModuleImageURL} />
-                </Card>
-              </div>
-              )
-            })
-          }
+        {!modules ? (
+          <p>loading records ...</p>
+        ) : modules.length === 0 ? (
+          <p>No records found ...</p>
+        ) : (
+        <CardContainer >
+          {modulelist.map((module)=> (
+            <ModuleCard module = {module} key={module.ModuleCode}/>
+            ))}
         </CardContainer>
+      )}
+      <button>Add Module</button>
     </>
     );
 }
