@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import Action from '../UI/Actions.jsx';
 import { CardContainer } from '../UI/Card.jsx';
+import ModuleForm from '../entity/module/ModuleForm.jsx';
 import ModuleCard from '../entity/module/ModuleCard.jsx';
 import './Modules.scss';
 
@@ -93,6 +95,7 @@ function Modules() {
   const myModulesEndpoint = `${apiURL}/modules/leaders/${loggedInUserGroup}`;
   // State -------------------------------------------------------------
   const [modules, setModules] = useState(null);
+  const [showForm, setShowForm] =  useState(false);
 
   const apiGet = async (endpoint) => {
     const response  = await fetch(endpoint);
@@ -103,11 +106,26 @@ function Modules() {
   useEffect(() => { 
     apiGet(myModulesEndpoint) 
     }, [myModulesEndpoint]);
+    
   // Handlers ----------------------------------------------------------
+  const handleAdd = () => setShowForm(true);
+  const handleCancel = () => setShowForm(false);
+  const handleSuccess = async () => {
+    handleCancel();
+    await apiGet(myModulesEndpoint);
+  }
+  
   // View --------------------------------------------------------------
     return (
     <>
         <h1>Modules</h1>
+
+        <Action.Tray>
+          {!showForm && <Action.Add showText buttonText= "Add new module" onClick={handleAdd}/>}
+        </Action.Tray>
+
+        {showForm && <ModuleForm onCancel={handleCancel} onSuccess={handleSuccess}/>}
+
         {!modules ? (
           <p>loading records ...</p>
         ) : modules.length === 0 ? (
@@ -115,11 +133,10 @@ function Modules() {
         ) : (
         <CardContainer >
           {modulelist.map((module)=> (
-            <ModuleCard module = {module} key={module.ModuleCode}/>
+            <ModuleCard module = {module} key={module.ModuleID}/>
             ))}
         </CardContainer>
       )}
-      <button>Add Module</button>
     </>
     );
 }

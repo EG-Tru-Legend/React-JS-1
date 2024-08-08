@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Card } from '../../UI/Card.jsx';
 import './UserCard.scss';
 
-
+    
 function UserCard({ user }) {
     // Initialisation ----------------------------------------------------
     // State -------------------------------------------------------------
