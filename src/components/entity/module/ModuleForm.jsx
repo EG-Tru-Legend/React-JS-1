@@ -15,7 +15,7 @@ const initialModule = {
 
 function ModuleForm ({ onCancel, onSuccess }) {
     // Initialisation ----------------------------------------------------
-    const apiURL = `https://softwarehub.uk/unibase/api`;
+    const apiURL = 'https://softwarehub.uk/unibase/api';
     const myYearsEndpoint = `${apiURL}/years`;
     const staffEndpoint = `${apiURL}/users/staff`;
     const postModuleEndpoint = `${apiURL}/modules`;
@@ -24,7 +24,7 @@ function ModuleForm ({ onCancel, onSuccess }) {
         html2js: {
             ModuleName: (value) => (value === '' ? null : value),
             ModuleCode: (value) => (value === '' ? null : value),
-            ModuleLevel: (value) => (parseInt(value)),
+            ModuleLevel: (value) => parseInt(value),
             ModuleYearID: (value) => (value === 0 ? null : parseInt(value)),
             ModuleLeaderID: (value) => (value === 0 ? null : parseInt(value)),
             ModuleImageURL: (value) => (value === '' ? null : value),
