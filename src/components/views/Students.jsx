@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import useLoad from '../api/useLoad.js';
 import { CardContainer } from '../UI/Card.jsx';
 import UserCard from '../entity/user/UserCard.jsx';
 
@@ -18,21 +18,10 @@ function Students() {
   }
 
   const loggedInUserGroup = 13;
-  const apiURL = 'https://softwarehub.uk/unibase/api';
-  const myGroupEndpoint = `${apiURL}/users/groups/${loggedInUserGroup}`;
+  const myGroupEndpoint = `/users/groups/${loggedInUserGroup}`;
 
   // State -------------------------------------------------------------
-  const [students, setStudents] = useState(null);
-
-  const apiGet = async (endpoint) => {
-    const response  = await fetch(endpoint);
-    const result = await response.json();
-    setStudents(result);
-  }
-
-  useEffect(() => { 
-    apiGet(myGroupEndpoint) 
-    }, [myGroupEndpoint]);
+  const [students, setStudents, loadingMessage] = useLoad(myGroupEndpoint);
 
   // Handlers ----------------------------------------------------------
   const handleAdd = (student) => {
@@ -48,7 +37,7 @@ function Students() {
 
         <CardContainer>
             {!students ? (
-            <p>loading records ...</p>
+            <p>{loadingMessage}</p>
             ) : students.length === 0 ? (
             <p>No records found ...</p>    
             ) : (
